@@ -1,8 +1,19 @@
 import socket
 import sys
-RS_DNS_Table = {}
+Root_table = {}
 TSHostname=""
-rsListenPort = 53
+#rsListenPort = 53
+
+if len(sys.argv) == 2:
+    try:
+        rsListenPort = int(sys.argv[1])
+    except ValueError:
+        exit("please provide port number")
+
+else:
+    exit("Not enough argument")
+
+
 
 buff=[]
 for line in open("PROJI-DNSRS.txt"):
@@ -13,10 +24,9 @@ for ll in buff:
         if lineSplit[2] == "NS":
             TSHostname = ll
         else:
-            RS_DNS_Table[lineSplit[0].lower()] = ll
+            Root_table[lineSplit[0].lower()] = ll
 
-print(RS_DNS_Table)
-rsListenPort = 53
+print(Root_table)
 
 try:
     ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -41,13 +51,13 @@ while True:
         exit("close connection")
     str = client_data.lower()
     print(str)
-    if str in RS_DNS_Table:
-        send_msg = RS_DNS_Table[str]
+    if str in Root_table:
+        send_msg = Root_table[str]
         # print("[S]: "+ send_msg)
         csockid.send(send_msg.encode('utf-8'))
     else:
         csockid.send(TSHostname.encode('utf-8'))
 # Close the server socket
-conn.close()
+#conn.close()
 ss.close()
 exit()

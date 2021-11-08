@@ -1,8 +1,18 @@
 import socket
 import sys
-TS_DNS_Table = {}
+Top_table = {}
 TSHostname=""
-tsListenPort = 54
+#tsListenPort = 54
+
+if len(sys.argv) == 2:
+    try:
+        tsListenPort = int(sys.argv[1])
+    except ValueError:
+        exit("please provide port number")
+
+else:
+    exit("Not enough argument")
+
 
 buff=[]
 for line in open("PROJI-DNSTS.txt"):
@@ -13,9 +23,9 @@ for ll in buff:
         if lineSplit[2] == "NS":
             TSHostname = ll
         else:
-            TS_DNS_Table[lineSplit[0].lower()] = ll
+            Top_table[lineSplit[0].lower()] = ll
 
-print(TS_DNS_Table)
+print(Top_table)
 
 try:
     ss = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -41,14 +51,14 @@ while True:
     orig_msg = client_data
     str = client_data.lower()
     print(str)
-    if str in TS_DNS_Table:
-        send_msg = TS_DNS_Table[str]
+    if str in Top_table:
+        send_msg = Top_table[str]
         # print("[S]: "+ send_msg)
         csockid.send(send_msg.encode('utf-8'))
     else:
         send_msg = orig_msg + " - Error:HOST NOT FOUND"
         csockid.send(send_msg.encode('utf-8'))
 # Close the server socket
-conn.close()
+#conn.close()
 ss.close()
 exit()

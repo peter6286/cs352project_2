@@ -1,6 +1,5 @@
 import socket
 import sys
-"""Top level name server program"""
 
 tsListenPort=0
 if len(sys.argv) == 2:
