@@ -1,14 +1,19 @@
 import socket
 import sys
 Root_table = {}
-TSHostname=""
+Top=""
 #rsListenPort = 53
 
-if len(sys.argv) == 2:
+if len(sys.argv) == 3:
     try:
         rsListenPort = int(sys.argv[1])
     except ValueError:
         exit("please provide port number")
+
+    try:
+        TSHostname = str(sys.argv[2])
+    except ValueError:
+        exit("please provide the top-level hostname")
 
 else:
     exit("Not enough argument")
@@ -22,7 +27,7 @@ for line in open("PROJI-DNSRS.txt"):
 for ll in buff:
         lineSplit = ll.split()
         if lineSplit[2] == "NS":
-            TSHostname = ll
+            Top = TSHostname + (" - NS")
         else:
             Root_table[lineSplit[0].lower()] = ll
 
@@ -56,7 +61,7 @@ while True:
         # print("[S]: "+ send_msg)
         csockid.send(send_msg.encode('utf-8'))
     else:
-        csockid.send(TSHostname.encode('utf-8'))
+        csockid.send(Top.encode('utf-8'))
 # Close the server socket
 #conn.close()
 ss.close()
