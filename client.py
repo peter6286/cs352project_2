@@ -55,6 +55,7 @@ for ll in buff:
     rs.send(inp.encode())
     server1_reply = rs.recv(1024).decode()
     print("message sent from root server1 %s" %(server1_reply))
+    #print(server1_reply[-2::])
     if(server1_reply[-2::]=="NS"):
         #print("get new one ")
         for attempt in range(2):
@@ -75,10 +76,12 @@ for ll in buff:
                     print('socket open error: {} \n'.format(err))
                     exit()
 
-                print(server1_reply.split()[0])
+                #print(server1_reply.split()[0])
                 second_look=server1_reply.split()[0]
                 tsServer_addr = socket.gethostbyname(second_look)
+                #print(tsServer_addr)
                 tsServer_binding = (tsServer_addr, tsListenPort)
+                #print(tsServer_binding)
                 ts.connect(tsServer_binding)
     else:
         f = open("RESOLVED.txt", 'a')  # create the write file and write the data
